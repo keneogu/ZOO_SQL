@@ -33,3 +33,38 @@ FROM route a JOIN route b ON
   JOIN stops stopa ON (a.stop=stopa.id)
   JOIN stops stopb ON (b.stop=stopb.id)
 WHERE stopa.name='Craiglockhart' AND stopb.name='London Road'
+
+7.
+SELECT DISTINCT a.company, a.num
+FROM route a JOIN route b ON
+  (a.company =b.company AND a.num=b.num)
+  JOIN stops stopa ON (a.stop=stopa.id)
+  JOIN stops stopb ON (b.stop=stopb.id)
+WHERE stopa.name='Haymarket' AND stopb.name='Leith'
+
+8.
+SELECT DISTINCT a.company, a.num
+FROM route a
+  JOIN route b ON (a.num=b.num AND a.company=b.company)
+  JOIN stops stopa ON (a.stop=stopa.id)
+  JOIN stops stopb ON (b.stop=stopb.id)
+WHERE stopa.name = 'Craiglockhart' AND stopb.name = 'Tollcross'
+
+9.
+SELECT DISTINCT stopb.name, a.company, a.num
+FROM route a
+  JOIN route b
+  ON a.company = b.company AND a.num = b.num
+  JOIN stops stopa ON a.stop = stopa.id
+  JOIN stops stopb ON b.stop = stopb.id
+WHERE stopa.name = 'Craiglockhart';
+
+10.
+SELECT b.num, b.company, stops.name, d.num, d.company
+  FROM route a
+    JOIN route b ON a.num = b.num AND a.company = b.company
+    JOIN (route c JOIN route d ON c.num = d.num AND c.company = d.company)
+    JOIN stops ON b.stop = stops.id
+  WHERE a.stop = (SELECT id FROM stops WHERE name = 'Craiglockhart')
+    AND c.stop = (SELECT id FROM stops WHERE name = 'Lochend')
+    AND b.stop = d.stop ORDER BY b.num, b.company, stops.name, d.num;
